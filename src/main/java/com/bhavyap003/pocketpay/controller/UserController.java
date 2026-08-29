@@ -4,6 +4,7 @@ import com.bhavyap003.pocketpay.dto.CreateUserRequest;
 import com.bhavyap003.pocketpay.dto.UserResponse;
 import com.bhavyap003.pocketpay.model.User;
 import com.bhavyap003.pocketpay.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,7 +18,7 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponse createUser(@RequestBody CreateUserRequest request){
+    public UserResponse createUser(@Valid @RequestBody CreateUserRequest request){
         return userService.createUser(request.getName(), request.getEmail());
     }
 
