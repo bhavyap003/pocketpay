@@ -9,7 +9,7 @@ public class GreetingService {
 
     public GreetingResponse getGreeting() {
 
-        User user = new User(1L, "Bhavya", "bhavya@example.com");
+        User user = new User("Bhavya", "bhavya@example.com");
 
         return new GreetingResponse("Hello " + user.getName() + ", welcome to PocketPay!");
     }
