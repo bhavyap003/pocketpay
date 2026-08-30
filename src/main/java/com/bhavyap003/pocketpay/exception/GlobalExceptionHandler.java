@@ -2,6 +2,7 @@ package com.bhavyap003.pocketpay.exception;
 
 import com.bhavyap003.pocketpay.dto.ErrorResponse;
 import com.bhavyap003.pocketpay.dto.ValidationErrorResponse;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -56,6 +57,16 @@ public class GlobalExceptionHandler {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(error);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex){
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.CONFLICT.value(), "Email already exists");
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(error);
