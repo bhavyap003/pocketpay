@@ -1,6 +1,7 @@
 package com.bhavyap003.pocketpay.service;
 
 import com.bhavyap003.pocketpay.dto.UserResponse;
+import com.bhavyap003.pocketpay.exception.EmailAlreadyExistsException;
 import com.bhavyap003.pocketpay.exception.UserNotFoundException;
 import com.bhavyap003.pocketpay.model.User;
 import com.bhavyap003.pocketpay.repository.UserRepository;
@@ -17,6 +18,9 @@ public class UserService {
 
 
     public UserResponse createUser(String name, String email){
+        if(userRepository.existsByEmail(email)){
+            throw new EmailAlreadyExistsException("Email already exists");
+        }
         User user = new User(name, email);
         user = userRepository.save(user);
 
