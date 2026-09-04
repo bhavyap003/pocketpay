@@ -1,7 +1,6 @@
 package com.bhavyap003.pocketpay.service;
 
-import com.bhavyap003.pocketpay.dto.UserResponse;
-import com.bhavyap003.pocketpay.exception.EmailAlreadyExistsException;
+import com.bhavyap003.pocketpay.exception.AccountNotFoundException;
 import com.bhavyap003.pocketpay.exception.UserNotFoundException;
 import com.bhavyap003.pocketpay.model.Account;
 import com.bhavyap003.pocketpay.model.User;
@@ -31,5 +30,11 @@ public class AccountService {
         Account account = new Account(initialBalance, user);
 
         return accountRepository.save(account);
+    }
+
+    public Account getAccount(Long id){
+        return accountRepository.findById(id)
+                .orElseThrow(() -> new AccountNotFoundException(
+                        "Account not found with id: " + id));
     }
 }

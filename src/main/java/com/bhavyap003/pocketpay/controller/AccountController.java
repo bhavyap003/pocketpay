@@ -3,10 +3,7 @@ package com.bhavyap003.pocketpay.controller;
 import com.bhavyap003.pocketpay.dto.CreateAccountRequest;
 import com.bhavyap003.pocketpay.model.Account;
 import com.bhavyap003.pocketpay.service.AccountService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -22,6 +19,11 @@ public class AccountController {
     @PostMapping
     public Account createAccount(@RequestBody CreateAccountRequest request){
         return accountService.createAccount(request.getUserId(), request.getInitialBalance());
+    }
+
+    @GetMapping("/{id}")
+    public Account getAccount(@PathVariable Long id){
+        return accountService.getAccount(id);
     }
 
 }

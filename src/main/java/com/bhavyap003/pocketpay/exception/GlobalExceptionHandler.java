@@ -71,4 +71,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(error);
     }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleAccountNotFound(AccountNotFoundException ex){
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(), ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
 }
