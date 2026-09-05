@@ -2,6 +2,7 @@ package com.bhavyap003.pocketpay.service;
 
 import com.bhavyap003.pocketpay.dto.AccountResponse;
 import com.bhavyap003.pocketpay.exception.AccountNotFoundException;
+import com.bhavyap003.pocketpay.exception.InvalidAmountException;
 import com.bhavyap003.pocketpay.exception.UserNotFoundException;
 import com.bhavyap003.pocketpay.model.Account;
 import com.bhavyap003.pocketpay.model.User;
@@ -41,5 +42,23 @@ public class AccountService {
                         "Account not found with id: " + id));
 
         return new AccountResponse(account.getId(), account.getBalance());
+    }
+
+    public AccountResponse deposit(Long accountId, BigDecimal amount){
+        if(amount.compareTo(BigDecimal.ZERO) <= 0){
+            throw new InvalidAmountException("Amount must be greater than zero");
+        }
+
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new AccountNotFoundException(
+                        "Account not found with id: " + accountId));
+
+        BigDecimal newBalance = account.getBalance().add(amount);
+
+        account.setBalance(newBalance);
+
+        Account savedAccount = accountRepository.save(account);
+
+        return new AccountResponse(savedAccount.getId(), savedAccount.getBalance());
     }
 }

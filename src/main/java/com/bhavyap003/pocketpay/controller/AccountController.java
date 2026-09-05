@@ -2,7 +2,7 @@ package com.bhavyap003.pocketpay.controller;
 
 import com.bhavyap003.pocketpay.dto.AccountResponse;
 import com.bhavyap003.pocketpay.dto.CreateAccountRequest;
-import com.bhavyap003.pocketpay.model.Account;
+import com.bhavyap003.pocketpay.dto.DepositRequest;
 import com.bhavyap003.pocketpay.service.AccountService;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,4 +26,10 @@ public class AccountController {
     public AccountResponse getAccount(@PathVariable Long id){
         return accountService.getAccount(id);
     }
+
+    @PostMapping("/{id}/deposit")
+    public AccountResponse deposit(@PathVariable Long id, @RequestBody DepositRequest request){
+        return accountService.deposit(id, request.getAmount());
+    }
+
 }
