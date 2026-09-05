@@ -1,14 +1,13 @@
 package com.bhavyap003.pocketpay.service;
 
 import com.bhavyap003.pocketpay.dto.AccountResponse;
-import com.bhavyap003.pocketpay.exception.AccountNotFoundException;
-import com.bhavyap003.pocketpay.exception.InsufficientBalanceException;
-import com.bhavyap003.pocketpay.exception.InvalidAmountException;
-import com.bhavyap003.pocketpay.exception.UserNotFoundException;
+import com.bhavyap003.pocketpay.dto.TransferResponse;
+import com.bhavyap003.pocketpay.exception.*;
 import com.bhavyap003.pocketpay.model.Account;
 import com.bhavyap003.pocketpay.model.User;
 import com.bhavyap003.pocketpay.repository.AccountRepository;
 import com.bhavyap003.pocketpay.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -85,4 +84,40 @@ public class AccountService {
         return new AccountResponse(savedAccount.getId(), savedAccount.getBalance());
     }
 
+    @Transactional
+    public TransferResponse transfer(Long senderAccountId, Long receiverAccountId, BigDecimal amount){
+        if(senderAccountId.equals(receiverAccountId)){
+            throw new InvalidTransferException("Sender and receiver accounts must be different");
+        }
+        if(amount.compareTo(BigDecimal.ZERO) <= 0){
+            throw new InvalidAmountException("Amount must be greater than zero");
+        }
+        Account sender = accountRepository.findById(senderAccountId)
+                .orElseThrow(() -> new AccountNotFoundException(
+                        "Sender account not found with id: " + senderAccountId));
+
+        Account receiver = accountRepository.findById(receiverAccountId)
+                .orElseThrow(() -> new AccountNotFoundException(
+                        "Receiver account not found with id: " + receiverAccountId));
+
+        if(sender.getBalance().compareTo(amount) < 0){
+            throw new InsufficientBalanceException("Account balance is insufficient");
+        }
+
+        BigDecimal newSenderBalance = sender.getBalance().subtract(amount);
+
+        BigDecimal newReceiverBalance = receiver.getBalance().add(amount);
+
+        sender.setBalance(newSenderBalance);
+        receiver.setBalance(newReceiverBalance);
+
+//        accountRepository.save(sender);
+//        accountRepository.save(receiver);
+
+        return new TransferResponse(
+                "Transfer successful",
+                senderAccountId,
+                receiverAccountId,
+                amount);
+    }
 }

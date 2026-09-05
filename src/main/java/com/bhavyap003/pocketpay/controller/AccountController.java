@@ -1,9 +1,6 @@
 package com.bhavyap003.pocketpay.controller;
 
-import com.bhavyap003.pocketpay.dto.AccountResponse;
-import com.bhavyap003.pocketpay.dto.CreateAccountRequest;
-import com.bhavyap003.pocketpay.dto.DepositRequest;
-import com.bhavyap003.pocketpay.dto.WithdrawRequest;
+import com.bhavyap003.pocketpay.dto.*;
 import com.bhavyap003.pocketpay.service.AccountService;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,4 +35,13 @@ public class AccountController {
         return accountService.withdraw(id, request.getAmount());
     }
 
+    @PostMapping("/transfer")
+    public TransferResponse transfer(@RequestBody TransferRequest request){
+
+        return accountService.transfer(request.getSenderAccountId(),
+                request.getReceiverAccountId(),
+                request.getAmount());
+    }
+
 }
+
