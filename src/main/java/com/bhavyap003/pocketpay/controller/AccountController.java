@@ -3,6 +3,7 @@ package com.bhavyap003.pocketpay.controller;
 import com.bhavyap003.pocketpay.dto.AccountResponse;
 import com.bhavyap003.pocketpay.dto.CreateAccountRequest;
 import com.bhavyap003.pocketpay.dto.DepositRequest;
+import com.bhavyap003.pocketpay.dto.WithdrawRequest;
 import com.bhavyap003.pocketpay.service.AccountService;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,11 @@ public class AccountController {
     @PostMapping("/{id}/deposit")
     public AccountResponse deposit(@PathVariable Long id, @RequestBody DepositRequest request){
         return accountService.deposit(id, request.getAmount());
+    }
+
+    @PostMapping("/{id}/withdraw")
+    public AccountResponse withdraw(@PathVariable Long id, @RequestBody WithdrawRequest request){
+        return accountService.withdraw(id, request.getAmount());
     }
 
 }
