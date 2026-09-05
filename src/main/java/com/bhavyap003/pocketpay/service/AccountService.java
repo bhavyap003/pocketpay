@@ -1,5 +1,6 @@
 package com.bhavyap003.pocketpay.service;
 
+import com.bhavyap003.pocketpay.dto.AccountResponse;
 import com.bhavyap003.pocketpay.exception.AccountNotFoundException;
 import com.bhavyap003.pocketpay.exception.UserNotFoundException;
 import com.bhavyap003.pocketpay.model.Account;
@@ -21,7 +22,7 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public Account createAccount(Long userId, BigDecimal initialBalance){
+    public AccountResponse createAccount(Long userId, BigDecimal initialBalance){
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(
@@ -29,12 +30,16 @@ public class AccountService {
 
         Account account = new Account(initialBalance, user);
 
-        return accountRepository.save(account);
+        Account savedAccount = accountRepository.save(account);
+
+        return new AccountResponse(savedAccount.getId(), savedAccount.getBalance());
     }
 
-    public Account getAccount(Long id){
-        return accountRepository.findById(id)
+    public AccountResponse getAccount(Long id){
+        Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException(
                         "Account not found with id: " + id));
+
+        return new AccountResponse(account.getId(), account.getBalance());
     }
 }
