@@ -4,23 +4,29 @@ import com.bhavyap003.pocketpay.dto.AccountResponse;
 import com.bhavyap003.pocketpay.dto.TransferResponse;
 import com.bhavyap003.pocketpay.exception.*;
 import com.bhavyap003.pocketpay.model.Account;
+import com.bhavyap003.pocketpay.model.Transaction;
 import com.bhavyap003.pocketpay.model.User;
 import com.bhavyap003.pocketpay.repository.AccountRepository;
+import com.bhavyap003.pocketpay.repository.TransactionRepository;
 import com.bhavyap003.pocketpay.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 public class AccountService {
 
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
 
-    public AccountService(UserRepository userRepository, AccountRepository accountRepository) {
+    public AccountService(UserRepository userRepository, AccountRepository accountRepository,
+                          TransactionRepository transactionRepository) {
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     public AccountResponse createAccount(Long userId, BigDecimal initialBalance){
@@ -113,6 +119,9 @@ public class AccountService {
 
 //        accountRepository.save(sender);
 //        accountRepository.save(receiver);
+
+        Transaction transaction = new Transaction(sender, receiver, amount, LocalDateTime.now());
+        transactionRepository.save(transaction);
 
         return new TransferResponse(
                 "Transfer successful",
