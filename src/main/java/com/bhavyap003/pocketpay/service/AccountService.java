@@ -1,6 +1,7 @@
 package com.bhavyap003.pocketpay.service;
 
 import com.bhavyap003.pocketpay.dto.AccountResponse;
+import com.bhavyap003.pocketpay.dto.TransactionResponse;
 import com.bhavyap003.pocketpay.dto.TransferResponse;
 import com.bhavyap003.pocketpay.exception.*;
 import com.bhavyap003.pocketpay.model.Account;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AccountService {
@@ -128,5 +131,23 @@ public class AccountService {
                 senderAccountId,
                 receiverAccountId,
                 amount);
+    }
+
+    public List<TransactionResponse> getTransactions(Long accountId){
+        List<Transaction> transactions = transactionRepository.findBySender_IdOrReceiver_Id(accountId, accountId);
+
+        List<TransactionResponse> responses = new ArrayList<>();
+
+        for(Transaction transaction : transactions){
+            TransactionResponse response = new TransactionResponse(
+                    transaction.getId(),
+                    transaction.getSender().getId(),
+                    transaction.getReceiver().getId(),
+                    transaction.getAmount(),
+                    transaction.getCreatedAt()
+            );
+            responses.add(response);
+        }
+        return responses;
     }
 }

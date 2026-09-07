@@ -4,6 +4,8 @@ import com.bhavyap003.pocketpay.dto.*;
 import com.bhavyap003.pocketpay.service.AccountService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/accounts")
@@ -41,6 +43,11 @@ public class AccountController {
         return accountService.transfer(request.getSenderAccountId(),
                 request.getReceiverAccountId(),
                 request.getAmount());
+    }
+
+    @GetMapping("/{accountId}/transactions")
+    public List<TransactionResponse> getTransactions(@PathVariable Long accountId){
+        return accountService.getTransactions(accountId);
     }
 
 }
