@@ -45,10 +45,5 @@ public class AccountController {
                 request.getAmount());
     }
 
-    @GetMapping("/{accountId}/transactions")
-    public List<TransactionResponse> getTransactions(@PathVariable Long accountId){
-        return accountService.getTransactions(accountId);
-    }
-
 }
 

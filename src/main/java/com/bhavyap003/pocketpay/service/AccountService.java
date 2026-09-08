@@ -150,4 +150,18 @@ public class AccountService {
         }
         return responses;
     }
+
+    public TransactionResponse getTransaction(Long transactionId){
+        Transaction transaction = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new TransactionNotFoundException(
+                        "Transaction not found with id: " + transactionId));
+
+        return new TransactionResponse(
+                transaction.getId(),
+                transaction.getSender().getId(),
+                transaction.getReceiver().getId(),
+                transaction.getAmount(),
+                transaction.getCreatedAt());
+
+    }
 }
